@@ -1,0 +1,32 @@
+name = "hex-graph-iso-conformance"
+defaultTargets = [
+  "HexGraphIsoConformance",
+  "hexgraphiso_emit_fixtures",
+  "hexgraphiso_emit_campaign",
+]
+
+leanOptions = [
+  { name = "doc.verso", value = true },
+  { name = "doc.verso.suggestions", value = false },
+]
+
+[[require]]
+name = "HexGraphIso"
+path = ".."
+
+[[require]]
+name = "hex-test-kit"
+git = "https://github.com/leanprover/hex-test-kit.git"
+rev = "5b3dc5d7789cb680d64f8f4046254f93b7424e4f"
+
+[[lean_lib]]
+name = "HexGraphIsoConformance"
+globs = ["HexGraphIso.Conformance"]
+
+[[lean_exe]]
+name = "hexgraphiso_emit_fixtures"
+root = "HexGraphIso.EmitFixtures"
+
+[[lean_exe]]
+name = "hexgraphiso_emit_campaign"
+root = "HexGraphIso.EmitCampaign"

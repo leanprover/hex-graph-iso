@@ -1,0 +1,27 @@
+name = "hex-graph-iso"
+defaultTargets = ["HexGraph", "HexGraphIso"]
+
+leanOptions = [
+  { name = "doc.verso", value = true },
+  { name = "doc.verso.suggestions", value = false },
+]
+
+[[require]]
+name = "HexBasic"
+git = "https://github.com/leanprover/hex-basic.git"
+rev = "2d7f55d190cc2df9c9bf55437f344e65fbddc7c0"
+
+[[require]]
+name = "HexMatrix"
+git = "https://github.com/leanprover/hex-matrix.git"
+rev = "049bf8e57b33cb87b4012ed9d2da4cce0af296d9"
+
+[[lean_lib]]
+name = "HexGraph"
+
+[[lean_lib]]
+name = "HexGraphIso"
+
+[[lean_lib]]
+name = "HexGraphIsoTests"
+globs = ["HexGraphIso.TacticTests"]
