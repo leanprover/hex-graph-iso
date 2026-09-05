@@ -1,26 +1,33 @@
-{"version": "1.2.0",
- "packagesDir": ".lake/packages",
- "packages":
- [{"url": "https://github.com/leanprover/hex-matrix.git",
-   "type": "git",
-   "subDir": null,
-   "scope": "",
-   "rev": "049bf8e57b33cb87b4012ed9d2da4cce0af296d9",
-   "name": "HexMatrix",
-   "manifestFile": "lake-manifest.json",
-   "inputRev": "049bf8e57b33cb87b4012ed9d2da4cce0af296d9",
-   "inherited": false,
-   "configFile": "lakefile.toml"},
-  {"url": "https://github.com/leanprover/hex-basic.git",
-   "type": "git",
-   "subDir": null,
-   "scope": "",
-   "rev": "2d7f55d190cc2df9c9bf55437f344e65fbddc7c0",
-   "name": "HexBasic",
-   "manifestFile": "lake-manifest.json",
-   "inputRev": "2d7f55d190cc2df9c9bf55437f344e65fbddc7c0",
-   "inherited": false,
-   "configFile": "lakefile.toml"}],
- "name": "«hex-graph-iso»",
- "lakeDir": ".lake",
- "fixedToolchain": false}
+{
+  "version": "1.2.0",
+  "packagesDir": ".lake/packages",
+  "packages": [
+    {
+      "url": "https://github.com/leanprover/hex-matrix.git",
+      "type": "git",
+      "subDir": null,
+      "scope": "",
+      "rev": "b55720b4d45a4701660eccc557022d6cb4016eaa",
+      "name": "HexMatrix",
+      "manifestFile": "lake-manifest.json",
+      "inputRev": "b55720b4d45a4701660eccc557022d6cb4016eaa",
+      "inherited": false,
+      "configFile": "lakefile.toml"
+    },
+    {
+      "url": "https://github.com/leanprover/hex-basic.git",
+      "type": "git",
+      "subDir": null,
+      "scope": "",
+      "rev": "6ad58796dca6bae4936003412816e4e844055558",
+      "name": "HexBasic",
+      "manifestFile": "lake-manifest.json",
+      "inputRev": "6ad58796dca6bae4936003412816e4e844055558",
+      "inherited": false,
+      "configFile": "lakefile.toml"
+    }
+  ],
+  "name": "\u00abhex-graph-iso\u00bb",
+  "lakeDir": ".lake",
+  "fixedToolchain": false
+}
