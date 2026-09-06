@@ -25,4 +25,4 @@ precompileModules = true
 
 [[lean_lib]]
 name = "HexGraphIsoTests"
-globs = ["HexGraphIso.TacticTests"]
+globs = ["HexGraphIso.TacticTests", "HexGraphIso.ModuleBoundaryTests", "HexGraphIso.TestGraphs"]
