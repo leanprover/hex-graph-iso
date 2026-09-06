@@ -8,19 +8,21 @@ module
 
 public import HexGraphIso.Tactic
 public import HexGraphIso.Random
+public import HexGraphIso.TestGraphs
 public meta import HexGraphIso.Tactic
 public meta import HexGraphIso.Random
+public meta import HexGraphIso.TestGraphs
 
 /-!
-Regression tests for the Mathlib-free `graph_iso` tactic: positive and
-negative goals, coloured and uncoloured goals, the limit syntax, and
-the promised diagnostics. The kernel replays every closing proof; every failure case
-asserts its message and leaves the goal unchanged.
+Tests for the Mathlib-free `graph_iso` tactic: positive and negative
+goals, coloured and uncoloured goals, the limit syntax, and the
+diagnostic messages. The kernel replays every closing proof. Each
+failure case asserts its message and leaves the goal unchanged.
 -/
 
 namespace Hex.GraphIso.TacticTests
 
-open Hex Hex.GraphIso
+open Hex Hex.GraphIso Hex.GraphIso.TestGraphs
 
 def p3 : Colored 3 1 :=
   { graph := Graph.ofEdges [(0, 1), (1, 2)]
@@ -37,12 +39,12 @@ def k3 : Colored 3 1 :=
 example : Isomorphic p3 p3' := by graph_iso
 example : ¬ Isomorphic p3 k3 := by graph_iso
 example : Isomorphic p3 p3' := by
-  graph_iso (maxNodes := 200000) (maxCheckerSteps := 10000000)
+  graph_iso (maxSearchNodes := 200000) (maxKernelSteps := 10000000)
 example : Isomorphic p3 p3' := by
-  graph_iso (maxCheckerSteps := 10000000) (maxCertNodes := 200000)
--- a zero certificate budget must still close the goal; this pair is
--- irregular, so the root separator takes it before any search leg
-example : ¬ Isomorphic p3 k3 := by graph_iso (maxCertNodes := 0)
+  graph_iso (maxKernelSteps := 10000000) (maxCertRecords := 200000)
+-- A zero certificate budget must still close the goal. This pair is
+-- irregular, so the root separator closes it before the certificate leg.
+example : ¬ Isomorphic p3 k3 := by graph_iso (maxCertRecords := 0)
 
 /-- error: graph_iso: the graphs are not isomorphic; the positive goal is not provable -/
 #guard_msgs in
@@ -52,19 +54,15 @@ example : Isomorphic p3 k3 := by graph_iso
 #guard_msgs in
 example : ¬ Isomorphic p3 p3' := by graph_iso
 
-/-- error: graph_iso: search exhausted: visited 6 nodes but maxNodes := 0 -/
+/-- error: graph_iso: search exhausted: visited 6 nodes but maxSearchNodes := 0 -/
 #guard_msgs in
-example : Isomorphic p3 p3' := by graph_iso (maxNodes := 0)
+example : Isomorphic p3 p3' := by graph_iso (maxSearchNodes := 0)
 
-/-- error: graph_iso: replay exhausted: checking the transporter takes 12 steps but maxCheckerSteps := 0 -/
+/-- error: graph_iso: replay exhausted: checking the transporter takes 12 steps but maxKernelSteps := 0 -/
 #guard_msgs in
-example : Isomorphic p3 p3' := by graph_iso (maxCheckerSteps := 0)
+example : Isomorphic p3 p3' := by graph_iso (maxKernelSteps := 0)
 
-/-- error: graph_iso: duplicate limit `maxNodes` -/
-#guard_msgs in
-example : Isomorphic p3 p3' := by graph_iso (maxNodes := 1) (maxNodes := 2)
-
-/-- error: graph_iso: unknown limit `maxFoo` -/
+/-- error: Invalid configuration option `maxFoo` for `Tactic.Config` -/
 #guard_msgs in
 example : Isomorphic p3 p3' := by graph_iso (maxFoo := 1)
 
@@ -85,8 +83,9 @@ def kneser52G : Graph 10 :=
      (3, 4), (3, 5), (3, 7), (4, 9), (5, 8), (6, 7)]
 
 /-- The pentagonal prism: also cubic on ten vertices, so degree
-refinement alone cannot separate it from the Petersen graph; the
-negative goal replays the verified pairwise decision in the kernel. -/
+refinement alone cannot separate it from the Petersen graph. The
+negative goal replays the two canonical-key certificates in the
+kernel. -/
 def prism5G : Graph 10 :=
   Graph.ofEdges
     [(0, 1), (1, 2), (2, 3), (3, 4), (0, 4),
@@ -105,23 +104,15 @@ set_option maxRecDepth 100000 in
 example : ¬ Isomorphic petersen prism5 := by graph_iso
 
 /-!
-The pairwise fallback is the exhaustion-semantics anchor, so it needs a
-goal that reaches it. Both separator legs are charged against `maxNodes`
-(four nodes for the root separator, `2 * (n + 1)` for the two-code
-separator), so a budget in `[4, 2 * (n + 1))` funds the pairwise
-decision while withdrawing the two-code separator. This pair is cubic,
-so the root separator does not take it either; with certificates off,
-only `Pairwise.decideIso?` is left. It refutes in 12 nodes.
+This pair is cubic, so the root refinement codes agree and only the
+certificate leg is left. Withdrawing its record budget leaves every
+negative route exhausted, and the message names the limit that ran out.
 -/
 
-set_option maxRecDepth 400000 in
-example : ¬ Isomorphic petersen prism5 := by
-  graph_iso (maxCertNodes := 0) (maxNodes := 21)
-
-/-- error: graph_iso: search exhausted: the pairwise decision ran out of nodes at maxNodes := 11 -/
+/-- error: graph_iso: every negative route is exhausted: the root refinement codes agree, and the certificates hold 18 and 13 records but maxCertRecords := 0 -/
 #guard_msgs in
 example : ¬ Isomorphic petersen prism5 := by
-  graph_iso (maxCertNodes := 0) (maxNodes := 11)
+  graph_iso (maxCertRecords := 0)
 
 /-!
 The same pair stated on bare `Graph 10` values: the tactic colours both
@@ -132,17 +123,10 @@ so the uncoloured goals need no wrapping at the call.
 example : Graph.Isomorphic petersenG kneser52G := by graph_iso
 
 example : Graph.Isomorphic petersenG kneser52G := by
-  graph_iso (maxNodes := 200000) (maxCheckerSteps := 10000000)
+  graph_iso (maxSearchNodes := 200000) (maxKernelSteps := 10000000)
 
 set_option maxRecDepth 100000 in
 example : ¬ Graph.Isomorphic petersenG prism5G := by graph_iso
-
--- a zero certificate budget must still close the uncoloured goal,
--- exactly as for the coloured one; this pair is cubic, so the root
--- separator does not take it and the two-code separator does
-set_option maxRecDepth 400000 in
-example : ¬ Graph.Isomorphic petersenG prism5G := by
-  graph_iso (maxCertNodes := 0)
 
 /-- error: graph_iso: the graphs are not isomorphic; the positive goal is not provable -/
 #guard_msgs in
@@ -176,65 +160,13 @@ example : Isomorphic edgeMarkA edgeMarkB := by graph_iso
 example : ¬ Isomorphic edgeMarkA nonedgeMark := by graph_iso
 
 /-!
-The positive random `n = 12` pair related by a recorded relabelling: the
-`G(12, 1/2)` graph of the first corpus seed against its image under the
-Fisher-Yates relabelling drawn from the continuation of the same stream.
+The recorded random `n = 12` corpus pair of `HexGraphIso.TestGraphs`:
+the `G(12, 1/2)` graph of the first seed against its image under the
+recorded Fisher-Yates relabelling, and against the graph of the second
+seed.
 -/
 
-def pairIdx (i j : Nat) : Nat :=
-  -- lexicographic pair index of `(i, j)`, `i < j`, over 12 vertices
-  i * 12 - i * (i + 1) / 2 + (j - i - 1)
-
-/-- The recorded pair bitmask of `Random.gnpMask ⟨Random.seed1⟩ 12`, kept
-literal so the kernel replay does not evaluate the UInt64 stream; the
-`#guard` below ties it to the generator. -/
-def mask12 : Nat := 48283412393242304007
-
-/-- The recorded Fisher-Yates relabelling drawn from the continuation of
-the same stream. -/
-def perm12 : Array Nat := #[11, 10, 1, 7, 3, 5, 4, 2, 9, 6, 8, 0]
-
-#guard mask12 == (Random.gnpMask ⟨Random.seed1⟩ 12).1
-#guard perm12 ==
-  (Random.shuffle (Random.gnpMask ⟨Random.seed1⟩ 12).2
-    (.ofFn (n := 12) (·.val))).1
-
-def g12 : Colored 12 1 :=
-  { graph := Graph.ofAdj
-      (fun i j => if i == j then false else
-        mask12.testBit (pairIdx (Nat.min i.val j.val) (Nat.max i.val j.val)))
-      (fun i j => by rcases Decidable.em (i = j) with h | h <;>
-        simp [h, Nat.min_comm, Nat.max_comm, BEq.comm])
-      (fun i => by simp)
-    coloring := Coloring.trivial 12 }
-
-def g12relabelled : Colored 12 1 :=
-  { graph := Graph.ofAdj
-      (fun i j => if i == j then false else
-        mask12.testBit (pairIdx
-          (Nat.min perm12[i.val]! perm12[j.val]!)
-          (Nat.max perm12[i.val]! perm12[j.val]!)))
-      (fun i j => by rcases Decidable.em (i = j) with h | h <;>
-        simp [h, Nat.min_comm, Nat.max_comm, BEq.comm])
-      (fun i => by simp)
-    coloring := Coloring.trivial 12 }
-
 example : Isomorphic g12 g12relabelled := by graph_iso
-
-/-- The recorded pair bitmask of the second corpus seed, giving the
-negative pair from the two recorded `G(12, 1/2)` seeds. -/
-def mask12b : Nat := 61032603037995048816
-
-#guard mask12b == (Random.gnpMask ⟨Random.seed2⟩ 12).1
-
-def g12b : Colored 12 1 :=
-  { graph := Graph.ofAdj
-      (fun i j => if i == j then false else
-        mask12b.testBit (pairIdx (Nat.min i.val j.val) (Nat.max i.val j.val)))
-      (fun i j => by rcases Decidable.em (i = j) with h | h <;>
-        simp [h, Nat.min_comm, Nat.max_comm, BEq.comm])
-      (fun i => by simp)
-    coloring := Coloring.trivial 12 }
 
 set_option maxRecDepth 400000 in
 example : ¬ Isomorphic g12 g12b := by graph_iso

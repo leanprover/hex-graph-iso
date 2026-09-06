@@ -60,29 +60,48 @@ example : ¬ Isomorphic p3c k3c := by graph_iso
   `Graph.isIso` and the rest. `Graph.singleColor` is the one-cell view
   they read, and `Graph.isomorphic_singleColor_iff` the equivalence
   they are transported along.
-- `findIso?`, `checkIso?`, and `canon?` are the resource-bounded
-  certificate operations. `SearchLimits` bounds the search (`maxNodes`, `maxCertNodes`)
-  and `ReplayLimits` bounds kernel replay (`maxCheckerSteps`). Exhaustion
-  returns `none` and is never evidence of non-isomorphism.
-- `CanonCert` and `checkCanon` certify a canonical form; `DiffCert` and
-  `checkDiff` certify non-isomorphism. Both are replayed by the kernel.
+- `autos` reports the automorphism generators the pinned traversal
+  discovers, in discovery order, with the vertex orbits, the orbit
+  count and the group order; `Graph.autos` is the uncoloured mirror.
+  Every returned generator is proved to be an automorphism
+  (`autos_isIso`) and vertices sharing an orbit representative are
+  proved to lie in one orbit (`autos_sameOrbit`). That the generators
+  generate the whole group is not yet proved, so the orbit count and
+  the group order are conformance-pinned rather than theorems.
+- `Aut.gens`, `Aut.orbits`, `Aut.numOrbits` and `Aut.order` are the four
+  fields on their own, for a caller who wants one of them and not the
+  traversals the others cost.
+- `checkIso?` is the replay-bounded permutation check. `ReplayLimits`
+  bounds kernel replay by `maxKernelSteps`, and exhaustion returns
+  `none`, never evidence of non-isomorphism.
+- `Nauty.certifyKey?` produces a canonical-key certificate and
+  `Nauty.checkCanon` replays it against the graph. `Nauty.checkDiff`
+  reports that two replayed keys differ, which is what refutes
+  isomorphism.
 - `graph_iso` closes closed goals of the form `Isomorphic G H` and
-  `¬ Isomorphic G H`, coloured or uncoloured, accepting
-  `(maxNodes := ...)`, `(maxCertNodes := ...)`, and
-  `(maxCheckerSteps := ...)` overrides.
-- `Hex.GraphIso.Reference` is an independent exhaustive canonical form kept
-  as a cross-check of the production pipeline.
+  `¬ Isomorphic G H`, coloured or uncoloured. A positive goal closes by
+  the relabel shortcut when one graph is syntactically a relabelling of
+  the other, and otherwise by a literal transporter the kernel checks
+  through `Kernel.checkIso`. A negative goal closes by the root
+  refinement codes when they already differ (`Kernel.rootCode`), and
+  otherwise by replaying one canonical-key certificate per graph
+  (`Kernel.checkKey`). `set_option trace.graph_iso true` names the route
+  a call took. The limits `(maxSearchNodes := ...)`,
+  `(maxCertRecords := ...)` and `(maxKernelSteps := ...)` may be given
+  in any order and default to `100000`, `100000` and `5000000`.
 
 # Verification
 
 The public surface carries the full theorem surface: canonical forms are
 isomorphism-invariant and isomorphism is exactly equality of canonical
-forms. The search is proved to refine the declarative canonical form:
-the certificate checker accepts the search's own answer on every input
-(`Nauty.certifyCanon?_isSome`), so the theorems about the checker
-transport to `canonicalize` without any certificate being produced or
-replayed on the answer path. No theorem depends on the transcription
-being faithful to nauty.
+forms. The anchor is the declarative canonical form `Nauty.specCanon`,
+the maximum leaf key of the unpruned individualization-refinement tree,
+and `canon_eq_specCanon` identifies the public form with it. The pruned
+search is proved to compute that key
+(`Nauty.canonSpecKey_eq_tracedKey`), so the certificate checker accepts
+the search's own answer on every input (`Nauty.certifyCanon?_isSome`)
+and no certificate is produced or replayed on the answer path. No
+theorem depends on the search being faithful to nauty.
 
 ```lean
 theorem iso_iff_canon_eq (G : Colored n k) (H : Colored n k) :
@@ -91,10 +110,12 @@ theorem iso_iff_canon_eq (G : Colored n k) (H : Colored n k) :
 theorem findIso_isSome_iff (G H : Colored n k) :
     (findIso G H).isSome = true ↔ Isomorphic G H
 
-theorem checkCanon_sound {limits : ReplayLimits} {G : Colored n k}
-    {cert : CanonCert n k} {result : CanonResult n k}
-    (h : checkCanon limits G cert = some result) :
-    result.form = canon G ∧ G.relabel result.label = result.form
+theorem Nauty.checkCanon_sound {G : Colored n k} {cert : Nauty.CertNode}
+    {B : Nauty.Key n} {lab : Array Nat} {res : CanonResult n k}
+    (h : Nauty.checkCanon G cert B lab = some res) :
+    Nauty.canonSpecKey G = B ∧ res.form = G.relabel res.label ∧
+      Isomorphic G res.form ∧
+      B.rows = Nauty.leafRows { g := Nauty.rowsOf G } lab
 ```
 
 Compatibility with nauty is a conformance property, not a theorem: an oracle

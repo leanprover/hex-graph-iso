@@ -6,28 +6,32 @@ Authors: Kim Morrison
 
 module
 
-public import HexGraphIso.Nauty.Cert
-public import HexGraphIso.IsoLit
-public import HexGraphIso.NodeLit
-public import HexGraphIso.NodePacked
-public import HexGraphIso.SeparatorPacked
-public import HexGraphIso.Separator
+public import HexGraphIso.Nauty.Cert.Cert
+public import HexGraphIso.Kernel.IsoLit
+public import HexGraphIso.Kernel.Packed
+public import HexGraphIso.Kernel.CheckKey
+public import HexGraphIso.Kernel.RootCode
 public import HexGraph.Basic
 public meta import Lean
 
 public section
 
 /-!
-Module-boundary kernel regression ladder for the certificate replay
-closure, in the mould of `HexBasic.ModuleBoundaryTests`: every
-obligation here is closed by `kdecide`, which assigns the raw
-`of_decide_eq_true` shape so that ONLY the module-finalization kernel
-evaluates it — the exact obligation the `graph_iso` certificate route
-emits. These stages caught two exposure gaps: `mash`/`cleanup` and
-`codeSentinel` missing `@[expose]` here, and core `Array.map`
-delegating to the unexposed `Array.mapM` (worked around by
-`Hex.Array.map'`; upstream fix pending in the lean4 exposure series).
-The tests must stay in their own module: the defect class is a
+Module-boundary kernel tests for the certificate replay, in the mould of
+`HexBasic.ModuleBoundaryTests`. Every goal here is closed by `kdecide`,
+which assigns the raw `of_decide_eq_true` shape so that only the
+module-finalization kernel evaluates it, the same shape the `graph_iso`
+certificate route emits. Together the examples check that every
+declaration the certificate route's kernel goal reaches is evaluable
+from another module: the refinement steps, the certificate checker, the
+packed bit-set operations, and the array and list helpers underneath
+them.
+
+`Hex.Array.map'` appears below in place of core `Array.map`, which
+delegates to an unexposed `Array.mapM` and so does not reduce across a
+module boundary.
+
+The tests must stay in their own module. The defect they catch is a
 callee's body being unavailable across a module boundary, so a
 same-module test proves nothing.
 -/
@@ -38,7 +42,7 @@ meta section
 open Lean Meta Elab Tactic
 
 /-- Close a decidable goal with `of_decide_eq_true (id (Eq.refl true))`,
-assigned raw so that ONLY the declaration kernel evaluates it. -/
+assigned raw so that only the declaration kernel evaluates it. -/
 elab "kdecide" : tactic => do
   let g ← getMainGoal
   let p ← g.getType
@@ -51,9 +55,6 @@ elab "kdecide" : tactic => do
   g.assign (mkApp3 (mkConst ``of_decide_eq_true) p inst h)
 
 end
-
--- sanity: the instrument itself works
-example : 2 + 2 = 4 := by kdecide
 
 private def rowsP : Array (VSet 10) :=
   (([50, 69, 138, 276, 521, 385, 770, 548, 104, 208] : List Nat).map VSet.ofNat).toArray
@@ -100,6 +101,11 @@ private def probeKey : Key 10 :=
   ⟨[128, 27412, 8, 53, 32767],
     ([14, 49, 577, 385, 322, 642, 148, 104, 536, 292] : List Nat).map VSet.ofNat⟩
 
+/-- The same key in the literal shape the tactic emits. -/
+private def probeKeyLit : Hex.GraphIso.Kernel.Key :=
+  ⟨[128, 27412, 8, 53, 32767],
+    [14, 49, 577, 385, 322, 642, 148, 104, 536, 292]⟩
+
 set_option maxRecDepth 1000000 in
 example : (refine { g := rowsOf probeGraph } 1
     (initialPartition probeGraph).1
@@ -107,9 +113,7 @@ example : (refine { g := rowsOf probeGraph } 1
     (initActive 10 (initialPartition probeGraph).2)
     (initialPartition probeGraph).2.length).longcode = 128 := by kdecide
 
--- residual-suspect isolation
-example : ((some true : Option Bool) = some true) := by kdecide
-example : (compare (5 : Nat) 3 = Ordering.gt) := by kdecide
+-- Individual list, array and bit-set helpers the checker calls.
 example : ([1,2,3].zipIdx 0 = [(1,0),(2,1),(3,2)]) := by kdecide
 example : (keyCmp probeKey probeKey = Ordering.eq) := by kdecide
 set_option maxRecDepth 1000000 in
@@ -126,8 +130,8 @@ example : checkNode { g := rowsP } 100 probeKey.rows
     (validGammas rowsP probeCert) 1 1
     lab0 (initPtn 10 12 [9]) (initActive 10 [9]) 1 probeCert
     probeKey.codes = none := by kdecide
--- core `Array.map` itself still stalls here (unexposed impl loop; see
--- the upstream draft); the house `Hex.Array.map'` reduces:
+-- Core `Array.map` does not reduce here, because it delegates to the
+-- unexposed `Array.mapM`. `Hex.Array.map'` reduces:
 example : (Hex.Array.map' (fun w => w + 1) lab0).toList =
     [1,2,3,4,5,6,7,8,9,10] := by kdecide
 example : (Hex.Array.map' (fun w => w + 1) #[1, 2]) = #[2, 3] := by kdecide
@@ -160,51 +164,27 @@ example : checkNode { g := rowsP } 100 probeKey.rows
 set_option maxRecDepth 1000000 in
 example : checkKey probeGraph probeCert probeKey = true := by kdecide
 
-/-- The separator closure kernel-reduces: the self-comparison of the
-probe graph evaluates both separator codes and their disagreement
-test to `false`. -/
-example : Hex.GraphIso.sepDiffG probeGraph probeGraph = false := by
-  kdecide
+/-! # The goals the tactic emits
 
-example : Hex.GraphIso.sepRootG probeGraph probeGraph = false := by
-  kdecide
+Both negative routes replay against the adjacency rows packed into one
+natural number, so these examples exercise `Kernel.packRows`, the packed
+replay (`pget`/`pset`, the byte-table `popCount`, the raw bit-set
+operations) and the root refinement end to end. -/
 
--- the negative tactic route's flat-literal obligation: pins the
--- kernel closure of flatRows/chunkRows/atD feeding checkNode
 set_option maxRecDepth 1000000 in
-example : Hex.GraphIso.checkKeyFlat probeGraph
-    probeGraph.graph.adjMatrix.data.toList probeCert probeKey
-    = true := by kdecide
+example : Hex.GraphIso.Kernel.checkKey probeGraph
+    (Hex.GraphIso.Kernel.packRows 10 probeGraph.graph.adjMatrix.data.toList)
+    probeCert probeKeyLit = true := by kdecide
 
-example : Hex.GraphIso.checkKeyLit probeGraph
-    probeGraph.graph.adjMatrix.data.toList probeCert probeKey.toL
-    = true := by kdecide
-
--- the packed-state obligations the tactic emits: pin the kernel
--- closure of the packed rows tie, the packed replay (pget/pset, the
--- byte-table popCount, the raw bit-set operations) and the packed
--- separators end to end
-example : Hex.GraphIso.checkKeyP probeGraph
-    (Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList)
-    probeCert probeKey.toL = true := by kdecide
-
-example : Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList =
-    Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList := by kdecide
-
-example : Hex.GraphIso.sepDiffLitP probeGraph probeGraph
-    (Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList)
-    (Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList) = false := by
-  kdecide
-
-example : Hex.GraphIso.sepRootLitP probeGraph probeGraph
-    (Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList)
-    (Hex.GraphIso.packRowsK 10 probeGraph.graph.adjMatrix.data.toList) = false := by
+example : Hex.GraphIso.Kernel.rootDiff probeGraph probeGraph
+    (Hex.GraphIso.Kernel.packRows 10 probeGraph.graph.adjMatrix.data.toList)
+    (Hex.GraphIso.Kernel.packRows 10 probeGraph.graph.adjMatrix.data.toList) = false := by
   kdecide
 
 
 /-! # Packed sets across limb boundaries
 
-`VSet 127` holds three 63-bit limbs; these probes put members in each
+`VSet 127` holds three 63-bit limbs. These examples put members in each
 limb and on both sides of the limb boundary at vertices `62` and `63`. -/
 
 private def bigA : VSet 127 := VSet.ofNat (2 ^ 126 + 2 ^ 63 + 2 ^ 62 + 1)

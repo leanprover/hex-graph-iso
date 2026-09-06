@@ -9,108 +9,91 @@ module
 public import HexGraphIso.Perm
 public import HexGraphIso.Colored
 public import HexGraphIso.Iso
-public import HexGraphIso.Lex
-public import HexGraphIso.Reference
-public import HexGraphIso.Canon
-public import HexGraphIso.Nauty.Bits
-public import HexGraphIso.Nauty.VSet
-public import HexGraphIso.Nauty.Refine
-public import HexGraphIso.Nauty.Equivariance
-public import HexGraphIso.Nauty.Search
-public import HexGraphIso.Nauty.CanonSpec
-public import HexGraphIso.Nauty.CellPerm
-public import HexGraphIso.Nauty.CellPermLoop
-public import HexGraphIso.Nauty.SpecIso
-public import HexGraphIso.IsoLit
-public import HexGraphIso.NodeLit
-public import HexGraphIso.NodePacked
-public import HexGraphIso.SeparatorPacked
-public import HexGraphIso.Separator
-public import HexGraphIso.Nauty.Cert
-public import HexGraphIso.Nauty.CertAutom
-public import HexGraphIso.ModuleBoundaryTests
-public import HexGraphIso.Nauty.CanonForm
-public import HexGraphIso.Nauty.TranscriptionInv
-public import HexGraphIso.Nauty.LeafFaithful
-public import HexGraphIso.Nauty.CodeFaithful
-public import HexGraphIso.Nauty.SearchInv
-public import HexGraphIso.Nauty.TraceAgree
-public import HexGraphIso.Nauty.StoreValid
-public import HexGraphIso.Nauty.SmallCell
-public import HexGraphIso.Nauty.SmallCellBranch
-public import HexGraphIso.Nauty.SmallCellIter
-public import HexGraphIso.Nauty.SmallCellTriple
-public import HexGraphIso.Nauty.SmallCellPair
-public import HexGraphIso.Nauty.SmallCellLeaves
-public import HexGraphIso.Nauty.SmallCellTie
-public import HexGraphIso.Nauty.SmallCellExotic
-public import HexGraphIso.Nauty.SmallCellExotic2
-public import HexGraphIso.Nauty.SmallCellExotic3
-public import HexGraphIso.Nauty.SmallCellAll
-public import HexGraphIso.Nauty.FirstPath
-public import HexGraphIso.Nauty.CertTotal
-public import HexGraphIso.Nauty.CertReplay
-public import HexGraphIso.Nauty.CertStore
-public import HexGraphIso.Nauty.LoopCoverage
-public import HexGraphIso.Nauty.SearchOutcome
-public import HexGraphIso.Nauty.SearchOutcomeTarget
-public import HexGraphIso.Nauty.SearchOutcomeReturn
-public import HexGraphIso.Nauty.SearchOutcomeLocated
-public import HexGraphIso.Nauty.SearchOutcomeProof
-public import HexGraphIso.Nauty.SearchOutcomeLocatedProof
-public import HexGraphIso.Nauty.SearchOutcomeInduction
-public import HexGraphIso.Nauty.SearchOutcomeLedger
-public import HexGraphIso.Nauty.SearchOutcomeFirst
-public import HexGraphIso.Nauty.SearchOutcomeLoop
-public import HexGraphIso.Nauty.SearchOutcomeEvent
-public import HexGraphIso.Nauty.SearchOutcomeResult
-public import HexGraphIso.Nauty.SearchOutcomeHistory
-public import HexGraphIso.Nauty.SearchOutcomeMutual
-public import HexGraphIso.Nauty.SearchOutcomePrune
-public import HexGraphIso.Nauty.SearchOutcomeExit
-public import HexGraphIso.Nauty.SearchOutcomeTotal
-public import HexGraphIso.Nauty.SearchOutcomeCarry
-public import HexGraphIso.Nauty.SearchOutcomeGate
-public import HexGraphIso.Nauty.SearchOutcomeStep
-public import HexGraphIso.Nauty.SearchOutcomeComplete
-public import HexGraphIso.Nauty.SearchOutcomeOtherLoop
-public import HexGraphIso.Nauty.SearchOutcomeLeaf
-public import HexGraphIso.Nauty.SearchOutcomeGateFail
-public import HexGraphIso.Nauty.SearchOutcomeOtherNode
-public import HexGraphIso.Nauty.SearchOutcomeOtherTotal
-public import HexGraphIso.Nauty.SearchOutcomeFirstLoop
-public import HexGraphIso.Nauty.SearchOutcomeFirstHyp
-public import HexGraphIso.Nauty.SearchOutcomeFirstSweep
-public import HexGraphIso.Nauty.SearchOutcomeFirstNode
-public import HexGraphIso.Nauty.SearchOutcomeRoot
-public import HexGraphIso.Nauty.SearchOutcomeCertify
-public import HexGraphIso.Nauty.RootEquitable
-public import HexGraphIso.Nauty.SearchReach
-public import HexGraphIso.Nauty.Translator
-public import HexGraphIso.Nauty.SpecCanon
-public import HexGraphIso.Nauty.Achieved
-public import HexGraphIso.Nauty.Complete
-public import HexGraphIso.Nauty.SearchModel
-public import HexGraphIso.Nauty.SearchAutom
-public import HexGraphIso.Nauty.SearchOrbit
-public import HexGraphIso.Nauty.Stabilize
-public import HexGraphIso.Nauty.AutosLedger
-public import HexGraphIso.Nauty.Domination
-public import HexGraphIso.Nauty.QuartetStmt
-public import HexGraphIso.Nauty.QuartetLoop
-public import HexGraphIso.Nauty.QuartetNode
-public import HexGraphIso.Nauty.OrbJoin
-public import HexGraphIso.Nauty.Domination
-public import HexGraphIso.Nauty.Equitable
-public import HexGraphIso.Nauty.EquitableStep
-public import HexGraphIso.Nauty.EquitableFix
-public import HexGraphIso.Nauty.TargetCell
+public import HexGraphIso.Limits
+public import HexGraphIso.Nauty.Search.Bits
+public import HexGraphIso.Nauty.Search.VSet
+public import HexGraphIso.Nauty.Search.Refine
+public import HexGraphIso.Nauty.Spec.Equivariance
+public import HexGraphIso.Nauty.Search.Search
+public import HexGraphIso.Nauty.Spec.CanonSpec
+public import HexGraphIso.Nauty.Spec.CellPerm
+public import HexGraphIso.Nauty.Spec.CellPermLoop
+public import HexGraphIso.Nauty.Spec.SpecIso
+public import HexGraphIso.Kernel.IsoLit
+public import HexGraphIso.Kernel.Packed
+public import HexGraphIso.Kernel.CheckKey
+public import HexGraphIso.Kernel.RootCode
+public import HexGraphIso.Nauty.Cert.Cert
+public import HexGraphIso.Nauty.Cert.CertAutom
+public import HexGraphIso.Nauty.Cert.CanonForm
+public import HexGraphIso.Nauty.Invariant.Refine
+public import HexGraphIso.Nauty.Invariant.Leaves
+public import HexGraphIso.Nauty.Invariant.Codes
+public import HexGraphIso.Nauty.Invariant.Refine
+public import HexGraphIso.Nauty.Cert.TraceAgree
+public import HexGraphIso.Nauty.Invariant.Store
+public import HexGraphIso.Nauty.SmallCell.Guard
+public import HexGraphIso.Nauty.SmallCell.Branch
+public import HexGraphIso.Nauty.SmallCell.Descent
+public import HexGraphIso.Nauty.SmallCell.Flips
+public import HexGraphIso.Nauty.SmallCell.Flips
+public import HexGraphIso.Nauty.SmallCell.Leaves
+public import HexGraphIso.Nauty.SmallCell.Transitive
+public import HexGraphIso.Nauty.SmallCell.Exotic
+public import HexGraphIso.Nauty.SmallCell.TwoTriple
+public import HexGraphIso.Nauty.SmallCell.FourCell
+public import HexGraphIso.Nauty.SmallCell.Transitive
+public import HexGraphIso.Nauty.Cert.CertTotal
+public import HexGraphIso.Nauty.Cert.CertReplay
+public import HexGraphIso.Nauty.Cert.CertStore
+public import HexGraphIso.Nauty.Invariant.Coverage
+public import HexGraphIso.Nauty.Correct.Outcome
+public import HexGraphIso.Nauty.Correct.Base
+public import HexGraphIso.Nauty.Correct.Unwind.Target
+public import HexGraphIso.Nauty.Correct.Unwind.Located
+public import HexGraphIso.Nauty.Correct.Unwind.Trail
+public import HexGraphIso.Nauty.Correct.State.Induction
+public import HexGraphIso.Nauty.Correct.State.Ledger
+public import HexGraphIso.Nauty.Correct.Frames
+public import HexGraphIso.Nauty.Correct.RunInv.History
+public import HexGraphIso.Nauty.Correct.RunInv.Mutual
+public import HexGraphIso.Nauty.Correct.RunInv.Coset
+public import HexGraphIso.Nauty.Correct.Exit.Final
+public import HexGraphIso.Nauty.Correct.Exit.Classify
+public import HexGraphIso.Nauty.Correct.Sweep.Base
+public import HexGraphIso.Nauty.Correct.Sweep.Carry
+public import HexGraphIso.Nauty.Correct.Sweep.Node
+public import HexGraphIso.Nauty.Correct.OffPath.Loop
+public import HexGraphIso.Nauty.Correct.OffPath.Node
+public import HexGraphIso.Nauty.Correct.FirstPath.Loop
+public import HexGraphIso.Nauty.Correct.FirstPath.Hyp
+public import HexGraphIso.Nauty.Correct.FirstPath.Sweep
+public import HexGraphIso.Nauty.Correct.Certify
+public import HexGraphIso.Nauty.Equitable.Root
+public import HexGraphIso.Nauty.Invariant.Reach
+public import HexGraphIso.Nauty.Cert.Translator
+public import HexGraphIso.Nauty.Spec.SpecCanon
+public import HexGraphIso.Nauty.Spec.Achieved
+public import HexGraphIso.Nauty.Model.Node
+public import HexGraphIso.Nauty.Model.Autom
+public import HexGraphIso.Nauty.Model.Store
+public import HexGraphIso.Nauty.Invariant.Orbits
+public import HexGraphIso.Nauty.Invariant.Stabilize
+public import HexGraphIso.Nauty.Invariant.Autos
+public import HexGraphIso.Nauty.Invariant.Domination
+public import HexGraphIso.Nauty.Invariant.Incumbent
+public import HexGraphIso.Nauty.Invariant.Closure
+public import HexGraphIso.Nauty.Invariant.Incumbent
+public import HexGraphIso.Nauty.Invariant.Orbits
+public import HexGraphIso.Nauty.Equitable.Basic
+public import HexGraphIso.Nauty.Equitable.Step
+public import HexGraphIso.Nauty.Equitable.Fix
+public import HexGraphIso.Nauty.Invariant.TargetCell
 public import HexGraphIso.Ops
+public import HexGraphIso.Autos
 public import HexGraphIso.Uncolored
 public import HexGraphIso.Random
 public import HexGraphIso.Tactic
-public import HexGraphIso.Pairwise
-public import HexGraphIso.PairwiseSound
 public import HexGraphIso.Families
 
 public section
@@ -118,27 +101,39 @@ public section
 /-!
 `HexGraphIso` is the Mathlib-free coloured graph canonical labelling
 library: nauty's individualization-and-refinement algorithm, run in Lean
-and proved to agree with an exhaustive reference canonical form.
+and proved to compute the declarative canonical form `Nauty.specCanon`.
 
-The user-facing surface is small. `Hex.GraphIso.canonicalize`, `canon` and
-`label` are the canonical labelling, `findIso` and `isIso` decide
+The user-facing surface is small. `Hex.GraphIso.canonicalize`, `canon`
+and `label` are the canonical labelling, `findIso` and `isIso` decide
 isomorphism, and `iso_iff_canon_eq` is the biconditional the whole
-library exists to prove. `certify?`, `checkCanon` and `canon?` are the
-bounded produce-then-replay pipeline for proof terms, and `checkDiff` its
-negative counterpart. `Families` supplies the named deterministic graphs
-and `Random` the reproducible pseudo-random ones.
+library exists to prove. `autos` reports the automorphism generators the
+search discovers, with the vertex orbits, the orbit count and the group
+order, and `Aut.gens`, `Aut.orbits`, `Aut.numOrbits` and `Aut.order` are
+those four on their own. `Families` supplies the named deterministic
+graphs and `Random` the reproducible pseudo-random ones.
 
 The whole surface is mirrored on bare graphs. `Hex.Graph.Isomorphic` is
-isomorphism of `Graph n`, `Graph.canon`, `Graph.findIso` and `Graph.isIso`
-are the operations, and `Graph.isomorphic_singleColor_iff` is the
-equivalence through `Graph.singleColor` along which every uncoloured
-theorem is transported.
+isomorphism of `Graph n`, `Graph.canon`, `Graph.findIso`, `Graph.isIso`
+and `Graph.autos` are the operations, and
+`Graph.isomorphic_singleColor_iff` is the equivalence through
+`Graph.singleColor` along which every uncoloured theorem is transported.
 
-The `graph_iso` tactic closes closed `Isomorphic` and `¬ Isomorphic` goals,
-coloured or uncoloured, with a kernel-checked proof; importing
-`HexGraphIsoMathlib` extends the same tactic to Mathlib `SimpleGraph` goals.
+The `graph_iso` tactic closes closed `Isomorphic` and `¬ Isomorphic`
+goals, coloured or uncoloured, with a kernel-checked proof. Importing
+`HexGraphIsoMathlib` extends the same tactic to Mathlib `SimpleGraph`
+goals.
 
-Everything under `Hex.GraphIso.Nauty` is the verified engine rather than
-the intended entry point: it is exported so that proofs can cite it, not
-because callers are expected to reach into it.
+`Hex.GraphIso.Nauty` is the verified search and its proof, organized by
+concept: `Search` is the executable transcription, `Spec` the
+declarative canonical form, `Cert` the certificates and the trusted
+`checkCanon` replay, `Correct` the induction identifying the two, and
+`Invariant`, `Equitable`, `SmallCell` and `Model` the supporting
+theories. It is exported so proofs can cite it, not because callers are
+expected to reach into it.
+
+`Hex.GraphIso.Kernel` holds the obligations `graph_iso` hands to the
+kernel: `Kernel.checkIso` for a transporter, `Kernel.checkKey` for a
+certificate replay and `Kernel.rootCode` for a root refinement code,
+each spelled over packed `Nat` state and proved equal to the `Array`
+definition the compiled search runs.
 -/
