@@ -15,6 +15,7 @@ public import HexGraphIso.Nauty.Search.VSet
 public import HexGraphIso.Nauty.Search.Refine
 public import HexGraphIso.Nauty.Spec.Equivariance
 public import HexGraphIso.Nauty.Search.Search
+public import HexGraphIso.Nauty.Search.Engine
 public import HexGraphIso.Nauty.Spec.CanonSpec
 public import HexGraphIso.Nauty.Spec.CellPerm
 public import HexGraphIso.Nauty.Spec.CellPermLoop
@@ -32,16 +33,13 @@ public import HexGraphIso.Nauty.Invariant.Codes
 public import HexGraphIso.Nauty.Invariant.Refine
 public import HexGraphIso.Nauty.Cert.TraceAgree
 public import HexGraphIso.Nauty.Invariant.Store
+public import HexGraphIso.Nauty.Equitable.Cells
+public import HexGraphIso.Nauty.Equitable.Individualize
+public import HexGraphIso.Nauty.Spec.Descent
+public import HexGraphIso.Nauty.SmallCell.Count
+public import HexGraphIso.Nauty.SmallCell.Flip
 public import HexGraphIso.Nauty.SmallCell.Guard
-public import HexGraphIso.Nauty.SmallCell.Branch
-public import HexGraphIso.Nauty.SmallCell.Descent
-public import HexGraphIso.Nauty.SmallCell.Flips
-public import HexGraphIso.Nauty.SmallCell.Flips
-public import HexGraphIso.Nauty.SmallCell.Leaves
-public import HexGraphIso.Nauty.SmallCell.Transitive
-public import HexGraphIso.Nauty.SmallCell.Exotic
-public import HexGraphIso.Nauty.SmallCell.TwoTriple
-public import HexGraphIso.Nauty.SmallCell.FourCell
+public import HexGraphIso.Nauty.SmallCell.Shapes
 public import HexGraphIso.Nauty.SmallCell.Transitive
 public import HexGraphIso.Nauty.Cert.CertTotal
 public import HexGraphIso.Nauty.Cert.CertReplay
@@ -91,7 +89,10 @@ public import HexGraphIso.Nauty.Equitable.Fix
 public import HexGraphIso.Nauty.Invariant.TargetCell
 public import HexGraphIso.Ops
 public import HexGraphIso.Autos
+public import HexGraphIso.AutComplete
+public import HexGraphIso.AutIndiv
 public import HexGraphIso.Uncolored
+public import HexGraphIso.UncoloredComplete
 public import HexGraphIso.Random
 public import HexGraphIso.Tactic
 public import HexGraphIso.Families
@@ -128,8 +129,9 @@ concept: `Search` is the executable transcription, `Spec` the
 declarative canonical form, `Cert` the certificates and the trusted
 `checkCanon` replay, `Correct` the induction identifying the two, and
 `Invariant`, `Equitable`, `SmallCell` and `Model` the supporting
-theories. It is exported so proofs can cite it, not because callers are
-expected to reach into it.
+theories. The umbrella exports the canonicalization theory for proofs
+that need it. Generation exposes its public contracts and small witness
+types, keeping the larger implementation behind private imports.
 
 `Hex.GraphIso.Kernel` holds the obligations `graph_iso` hands to the
 kernel: `Kernel.checkIso` for a transporter, `Kernel.checkKey` for a
