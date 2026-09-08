@@ -9,12 +9,12 @@ leanOptions = [
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "1a0fff2c8f545753b01cff0d941bf48f945cd299"
+rev = "v0.2.0"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "f857b2b4495dc8d9ba6583d559d2b885ccbf40fc"
+rev = "v0.2.0"
 
 [[lean_lib]]
 name = "HexGraph"
@@ -25,4 +25,4 @@ precompileModules = true
 
 [[lean_lib]]
 name = "HexGraphIsoTests"
-globs = ["HexGraphIso.TacticTests", "HexGraphIso.ModuleBoundaryTests", "HexGraphIso.TestGraphs"]
+globs = ["HexGraphIso.TestGraphs", "HexGraphIso.TacticTests", "HexGraphIso.ModuleBoundaryTests"]
