@@ -7,10 +7,10 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "3ce0f3dcaf3b51a23af13aa15f8524f387aa015f",
+      "rev": "887323f57cf55b6be3fad6f7cd6f36db8f8e2df5",
       "name": "HexMatrix",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.5.0",
+      "inputRev": "v0.6.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     },
@@ -19,10 +19,22 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "38d0794d2a3dae4ca080b40e0694d212cc357f33",
+      "rev": "a7de08cb8ff56c86e43ddb909e16df78e672a303",
       "name": "HexBasic",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.5.0",
+      "inputRev": "v0.6.0",
+      "inherited": false,
+      "configFile": "lakefile.toml"
+    },
+    {
+      "url": "https://github.com/leanprover/hex-perm-group.git",
+      "type": "git",
+      "subDir": null,
+      "scope": "",
+      "rev": "858060ba236ee6a3d9917ee060b6aaf90547644b",
+      "name": "HexPermGroup",
+      "manifestFile": "lake-manifest.json",
+      "inputRev": "v0.6.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     }

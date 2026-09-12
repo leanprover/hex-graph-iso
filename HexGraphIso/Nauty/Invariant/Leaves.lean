@@ -11,10 +11,10 @@ public import HexGraphIso.Nauty.Spec.CanonSpec
 public section
 
 /-!
-Leaf-comparison faithfulness: the transcription's `testcanlab` /
-`updatecan` leaf handling implements model-level key comparison.
+Leaf-comparison faithfulness: the search's `testcanlab` /
+`updatecan` leaf handling implements specification-key comparison.
 
-At a leaf tied on codes, `processnode` brings the stored canonical
+At a leaf tied on codes, `classify` brings the stored canonical
 graph up to date (`updatecan` overwrites rows `samerows..n-1` with
 the incumbent `canonlab`'s rows) and compares the fresh leaf against
 it row by row (`testcanlab`). This file characterizes both against
@@ -30,9 +30,9 @@ the specification's `leafRows`:
   outcome is `listCmp VSet.rowCmp (leafRows ctx lab) (leafRows ctx
   canonlab)`, and the out-state store satisfies the invariant both at
   `n` against the incumbent and at the returned prefix length against
-  the fresh leaf, re-establishing `CanongInv` whichever way the leaf
-  resolves (code `3` installs `lab` with `samerows := sr`, the other
-  codes keep `canonlab` with `samerows = n`);
+  the fresh leaf, re-establishing `CanongInv` after this row comparison
+  (`.better sr` installs `lab` with `samerows := sr`; the tied and worse
+  row verdicts retain `canonlab` with `samerows = n`);
 - `keyCmp_codes_eq`: on equal code lists the key comparison is the
   row comparison, connecting the trichotomy to `keyCmp` on leaf keys.
 
@@ -423,13 +423,7 @@ theorem testcanlab_snd_le (ctx : Ctx n) (canong : Array (VSet n)) (lab : Array N
 
 /-! **The packaged per-leaf clause** -/
 
-/-- The per-leaf clause for the simulation induction: at a code-tied
-leaf, `processnode` updates the store and compares. Under the store
-invariant, the comparison outcome is the model row comparison of the
-two leaf keys, and the updated store satisfies the invariant both at
-`n` against the incumbent and at the returned prefix length against
-the fresh leaf, so `CanongInv` holds again whichever way the leaf
-resolves. -/
+/-- Canonical row updates and leaf comparison implement lexicographic leaf-row comparison. -/
 theorem leafEvent_faithful {ctx : Ctx n} {canong : Array (VSet n)} {canonlab lab : Array Nat}
     {samerows : Nat}
     (hinv : CanongInv ctx canong canonlab samerows) :
