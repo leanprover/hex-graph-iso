@@ -1,5 +1,5 @@
 name = "hex-graph-iso"
-defaultTargets = ["HexGraph", "HexGraphIso"]
+defaultTargets = ["HexGraphIso"]
 
 leanOptions = [
   { name = "doc.verso", value = true },
@@ -9,24 +9,23 @@ leanOptions = [
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "v0.6.0"
+rev = "v0.7.0"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "v0.6.0"
+rev = "v0.7.0"
 
 [[require]]
 name = "HexPermGroup"
 git = "https://github.com/leanprover/hex-perm-group.git"
-rev = "v0.6.0"
-
-[[lean_lib]]
-name = "HexGraph"
+rev = "v0.7.0"
 
 [[lean_lib]]
 name = "HexGraphIso"
-precompileModules = true
+
+[[lean_lib]]
+name = "HexGraph"
 
 [[lean_lib]]
 name = "HexGraphIsoTests"

@@ -7,10 +7,10 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "887323f57cf55b6be3fad6f7cd6f36db8f8e2df5",
+      "rev": "840c54a6d4c79019e35b61f2337c8cf071542738",
       "name": "HexMatrix",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.6.0",
+      "inputRev": "v0.7.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     },
@@ -19,10 +19,10 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "a7de08cb8ff56c86e43ddb909e16df78e672a303",
+      "rev": "c5b9f3befd306eba663345c8d0bd3a252e3b803e",
       "name": "HexBasic",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.6.0",
+      "inputRev": "v0.7.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     },
@@ -31,10 +31,10 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "858060ba236ee6a3d9917ee060b6aaf90547644b",
+      "rev": "52ca47f9a0c08b6f4ed929fac0e0ceeb51ad1986",
       "name": "HexPermGroup",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.6.0",
+      "inputRev": "v0.7.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     }
