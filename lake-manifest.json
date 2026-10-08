@@ -7,10 +7,10 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "840c54a6d4c79019e35b61f2337c8cf071542738",
+      "rev": "29589a8de1337bcf6c8d846eb3447351b7c22b34",
       "name": "HexMatrix",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.7.0",
+      "inputRev": "v0.8.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     },
@@ -22,7 +22,7 @@
       "rev": "c5b9f3befd306eba663345c8d0bd3a252e3b803e",
       "name": "HexBasic",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.7.0",
+      "inputRev": "v0.8.0",
       "inherited": false,
       "configFile": "lakefile.toml"
     },
@@ -31,12 +31,12 @@
       "type": "git",
       "subDir": null,
       "scope": "",
-      "rev": "52ca47f9a0c08b6f4ed929fac0e0ceeb51ad1986",
+      "rev": "297b6cf8753933dc2310a5aae36efd6ced448d2b",
       "name": "HexPermGroup",
       "manifestFile": "lake-manifest.json",
-      "inputRev": "v0.7.0",
+      "inputRev": "v0.8.0",
       "inherited": false,
-      "configFile": "lakefile.toml"
+      "configFile": "lakefile.lean"
     }
   ],
   "name": "\u00abhex-graph-iso\u00bb",
