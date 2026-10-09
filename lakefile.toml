@@ -9,17 +9,17 @@ leanOptions = [
 [[require]]
 name = "HexBasic"
 git = "https://github.com/leanprover/hex-basic.git"
-rev = "v0.8.0"
+rev = "v0.9.0"
 
 [[require]]
 name = "HexMatrix"
 git = "https://github.com/leanprover/hex-matrix.git"
-rev = "v0.8.0"
+rev = "v0.9.0"
 
 [[require]]
 name = "HexPermGroup"
 git = "https://github.com/leanprover/hex-perm-group.git"
-rev = "v0.8.0"
+rev = "v0.9.0"
 
 [[lean_lib]]
 name = "HexGraphIso"
